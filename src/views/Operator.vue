@@ -109,7 +109,7 @@ export default {
   },
   created() {
     console.log("created");
-    this.socket = new WebSocket("ws://localhost:40000/ws");
+    this.socket = new WebSocket("ws://192.168.1.182:50001/ws");
     this.socket.onclose = () => {
       this.enable = false;
     };

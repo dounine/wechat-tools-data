@@ -9,7 +9,7 @@ module.exports = {
         },
         proxy: {
             "/api": {
-                target: `http://localhost:40000`,
+                target: `http://192.168.1.182/api`,
                 ws: true,
                 changeOrigin: true, // 是否改变域名
                 pathRewrite: {
@@ -25,5 +25,5 @@ module.exports = {
             libraryTarget: 'umd',
         }
     },
-    publicPath: process.env.NODE_ENV === 'production' ? './' : `/`
+    publicPath: process.env.NODE_ENV === 'production' ? '/' : `/`
 }
