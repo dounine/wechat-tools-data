@@ -36,4 +36,4 @@ server {
 复制
 ```
 cp -rf dist/* /etc/nginx/conf.d/data 
-``
+```
