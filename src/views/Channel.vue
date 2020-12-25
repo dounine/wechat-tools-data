@@ -7,6 +7,14 @@
     </div>
     <template #footer>
       <span class="dialog-footer">
+        <el-checkbox-group
+          v-model="checkList"
+          @change="checkListChange"
+          style="display: inline-block; margin-right: 20px"
+        >
+          <el-checkbox label="query">自动抓数据</el-checkbox>
+          <el-checkbox label="close">自动关闭窗口</el-checkbox>
+        </el-checkbox-group>
         <el-button @click="qrcodeVisable = false">取 消</el-button>
         <el-button type="primary" @click="qrcodeVisable = false">确定</el-button>
       </span>
@@ -82,7 +90,7 @@
             <el-button
               @click="downloadFile"
               :disabled="!enable || !download"
-              itype="primary"
+              type="primary"
               icon="el-icon-download"
             ></el-button>
           </el-button-group>
@@ -209,6 +217,11 @@ export default {
   data() {
     return {
       day: localStorage.getItem("day") || "1",
+      checkList: (localStorage.getItem("channelScanConfig") || "query,close")
+        .split(",")
+        .filter((item) => {
+          return item;
+        }),
       qrcodeVisable: false,
       qrcodeScan: false,
       batchEditorInput: "",
@@ -245,11 +258,17 @@ export default {
           this.scanImg = data.data.img;
         } else if (data.data.type === "qrcodeLoginSuccess") {
           this.qrcodeLoginSuccess = true;
-          this.qrcodeVisable = false;
+
           this.$message({
             message: "扫码成功",
             type: "success",
           });
+          if (this.checkList.includes("close")) {
+            this.qrcodeVisable = false;
+          }
+          if (this.checkList.includes("query")) {
+            this.dataQuery();
+          }
         } else if (data.data.type === "gameFinish") {
           this.processing[data.data.game] = {
             process: data.data.process,
@@ -284,6 +303,16 @@ export default {
     },
   },
   methods: {
+    checkListChange(value) {
+      localStorage.setItem(
+        "channelScanConfig",
+        this.checkList
+          .filter((item) => {
+            return item;
+          })
+          .join(",")
+      );
+    },
     //二维码获取
     downloadFile() {
       if (this.download) {
