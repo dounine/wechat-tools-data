@@ -91,7 +91,7 @@
               @click="downloadFile"
               :disabled="!enable || !download"
               type="primary"
-              icon="el-icon-download"
+              :icon="mergeFinish ? 'el-icon-loading' : 'el-icon-download'"
             ></el-button>
           </el-button-group>
         </div>
@@ -144,58 +144,6 @@
           @click="showInput"
           >添加游戏</el-button
         >
-
-        <!-- <div class="operator-item" v-for="item in golds" :key="item.id">
-          <div
-            style="
-              width: 140px;
-              height: 140px;
-              text-align: center;
-              line-height: 140px;
-              display: inline-block;
-            "
-          >
-            <img
-              v-if="item.imgUrl && item.finish == undefined"
-              :src="item.imgUrl"
-              class="operator-scan"
-              alt=""
-            />
-            <div v-if="!item.imgUrl">
-              <i class="el-icon-loading" />
-              <span style="color: #606266; margin-left: 4px">二维码获取中...</span>
-            </div>
-            <div v-if="item.finish === false">
-              <i class="el-icon-loading" />
-              <span style="color: #606266; margin-left: 4px">数据获取中...</span>
-            </div>
-            <div v-if="item.finish === true">
-              <el-button type="success" icon="el-icon-check" circle></el-button>
-              <span style="color: #606266; margin-left: 4px">数据获取成功</span>
-            </div>
-          </div>
-          <div
-            class="operator-info"
-            style="color: #606266; font-size: 14px"
-            v-if="!item.gold && item.timeout"
-          >
-            请在{{ item.timeout }}秒内完成扫码
-          </div>
-          <div class="operator-info" v-if="item.gold">
-            <div style="line-height: 30px">
-              <span style="color: #909399">游戏: </span>
-              <span style="color: #606266; font-weight: 600">{{ item.name }}</span>
-            </div>
-            <div style="line-height: 30px">
-              <span style="color: #909399">广告金: </span>
-              <span style="color: #606266; font-weight: 600">{{ item.gold }}</span>
-            </div>
-            <div style="line-height: 30px">
-              <span style="color: #909399">广告余额: </span>
-              <span style="color: #606266; font-weight: 600">{{ item.expireGold }}</span>
-            </div>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -225,6 +173,7 @@ export default {
       qrcodeVisable: false,
       qrcodeScan: false,
       batchEditorInput: "",
+      mergeing: false,
       processing: {},
       batchEditorVisable: false,
       channels: (localStorage.getItem("channels") || "").split(",").filter((item) => {
@@ -258,7 +207,6 @@ export default {
           this.scanImg = data.data.img;
         } else if (data.data.type === "qrcodeLoginSuccess") {
           this.qrcodeLoginSuccess = true;
-
           this.$message({
             message: "扫码成功",
             type: "success",
@@ -274,6 +222,18 @@ export default {
             process: data.data.process,
             success: data.data.success,
           };
+        } else if (data.data.type === "mergeing") {
+          this.mergeing = true;
+          this.$message({
+            message: "数据合并中、请稍等...",
+            type: "info",
+          });
+        } else if (data.data.type === "mergeFinish") {
+          this.mergeFinish = false;
+          this.$message({
+            message: "数据合并完成、数据可以下载",
+            type: "success",
+          });
         } else if (data.data.type === "gamesFinish") {
           const errorOjb = {};
           Object.keys(this.processing).forEach((item) => {
