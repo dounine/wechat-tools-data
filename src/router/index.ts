@@ -1,27 +1,19 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Operator from '../views/Operator.vue'
+import Gold from '../views/Gold.vue'
+import Channel from '../views/Channel.vue'
 import Handler from '../views/handle/Handler.vue'
 import Offset from '../views/handle/Offset.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/:platform',
-    name: 'Operator',
-    component: Operator,
-    children: [
-      {
-        path: ':symbol/:contractType/:direction',
-        name: 'Handler',
-        component: Handler,
-        children: [
-          {
-            path: ':offset',
-            name: 'Offset',
-            component: Offset
-          }
-        ]
-      }
-    ]
+    path: '/gold',
+    name: 'Gold',
+    component: Gold
+  },
+  {
+    path: '/channel',
+    name: 'Channel',
+    component: Channel
   },
   { path: '', redirect: "/gold" }
 ]

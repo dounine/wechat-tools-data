@@ -89,7 +89,7 @@
   <div v-if="!enable" v-loading="true" element-loading-text="连接已断开、请刷新页面" />
   <div
     v-if="golds.length === 0"
-    style="text-align: center; color: #C0C4CC; font-size: 14px"
+    style="text-align: center; color: #c0c4cc; font-size: 14px"
   >
     <i class="el-icon-info"></i> 点击右上角添加、然后为每个二维码选择对应的游戏登录即可。
   </div>
@@ -98,6 +98,7 @@
 import { mapState, mapActions } from "vuex";
 import Clipboard from "clipboard";
 import { ElMessage } from "element-plus";
+import { wsUrl } from "../../package.json";
 export default {
   data() {
     return {
@@ -109,7 +110,7 @@ export default {
   },
   created() {
     console.log("created");
-    this.socket = new WebSocket("ws://192.168.1.182:50001/ws");
+    this.socket = new WebSocket(`${wsUrl}/ws/gold`);
     this.socket.onclose = () => {
       this.enable = false;
     };

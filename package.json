@@ -1,6 +1,7 @@
 {
   "name": "wechat-tools-data",
   "version": "0.1.0",
+  "wsUrl": "ws://192.168.1.182:50001",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
